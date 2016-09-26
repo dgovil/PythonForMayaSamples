@@ -11,13 +11,13 @@ This course will teach Python for Maya using an artist friendly approach, by bre
 
 During the course, we'll create a few different projects to both showcase how Python is useful in a real world context,and to learn new concepts
 
-* Create and prop geometry with a simple rig [introduction](introduction/)
+* Create and prop geometry with a simple rig ([LINK](introduction/))
 * Rename and organize a scene
 * Automatically create Gears for modelling with a configurable amount of teeth
 * An Animation Tweener with a simple UI
 * A Library tool for Rigging Controls with a UI
 * A Light Manager
-* A command line file renaming tool
+* A command line file tool to manage image sequences
 
 ## Tools That We'll Be Using
 
@@ -52,6 +52,7 @@ For the course we will use the following
   I would recommend downloading PyCharm Edu from here: https://www.jetbrains.com/pycharm-edu/
   
   PyCharm Edu is a version of PyCharm with a simplified interface (optional) and coursework that will help a user learn Python in their spare time.
+  
   
 * **Other Editors**
   There are a lot of other editors, and I will personally not be using them for this course.
