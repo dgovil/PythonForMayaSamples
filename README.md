@@ -1,4 +1,5 @@
-# PythonForMayaSamples
+# Python For Maya: An Artist Friendly Course
+
 Code samples for people who take part in my Python for Maya course
 
 The course is not currently live, but this code repo will represent the projects being taught by the course.
@@ -10,12 +11,13 @@ This course will teach Python for Maya using an artist friendly approach, by bre
 
 During the course, we'll create a few different projects to both showcase how Python is useful in a real world context,and to learn new concepts
 
-* Create and prop geometry with a simple rig
+* Create and prop geometry with a simple rig [introduction](introduction/)
 * Rename and organize a scene
 * Automatically create Gears for modelling with a configurable amount of teeth
 * An Animation Tweener with a simple UI
 * A Library tool for Rigging Controls with a UI
-* A Light Manager 
+* A Light Manager
+* A command line file renaming tool
 
 ## Tools That We'll Be Using
 
