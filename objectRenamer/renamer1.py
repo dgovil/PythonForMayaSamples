@@ -67,6 +67,8 @@ for obj in selection:
     elif objType == "joint":
         suffix = 'jnt'
     elif objType == 'camera':
+        # In the case of the camera, we will say to continue.
+        # Continue means that we will continue on to the next item in the list and skip the rest of the logic for this one
         print "Skipping camera"
         continue
     else:
