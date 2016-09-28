@@ -72,6 +72,7 @@ class Gear(object):
 
         # Instead of returning a value, lets just store the extrude node onto the class as a class variable
         self.extrude = cmds.polyExtrudeFacet(localTranslateZ=length)
+        cmds.select(clear=True)
 
     def changeLength(self, length=0.3):
         # Because we stored the extrude node on the class, we can just get it directly

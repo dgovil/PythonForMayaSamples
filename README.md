@@ -24,6 +24,7 @@ During the course, we'll create a few different projects to both showcase how Py
 For the course we will use the following
 
 * **Maya 2017**
+
   This is currently the latest version of Maya and has some major changes that will be covered.
   Feel free to use an older version of Maya (as low as 2011), as I will cover the differences and give you the knowledge to adapt
   
@@ -31,6 +32,7 @@ For the course we will use the following
   You can download a Maya 2017 trial here: http://www.autodesk.com/products/maya/free-trial
   
 * **Python 2.7**
+
   Obviously, this course will use Python, but it is important to note we will be using Python 2.7 and not Python 3.x
   
   If you do not already have Python installed, I recommend downloading Anaconda instead.
@@ -46,6 +48,7 @@ For the course we will use the following
   These changes are for the better but due to large investment into Python 2 code, Maya will continue to be on Python 2 for a while longer.
   
 * **PyCharm**
+
   PyCharm is a very well established IDE with a lot of useful features for a beginner to both learn with and grown into a full fledged developer.
   It is my editor of choice today.
   
@@ -53,8 +56,22 @@ For the course we will use the following
   
   PyCharm Edu is a version of PyCharm with a simplified interface (optional) and coursework that will help a user learn Python in their spare time.
   
+* **Maya DevKit**
+
+  Unfortunately from Maya 2016 onwards, Autodesk stopped shipping the Maya developer kit with Maya.
+  This isn't super necessary for our course, but it does provide some nice autocomplete features in our editors.
+  
+  If you're on **Maya 2016** download the zip file from here: https://github.com/autodesk-adn/Maya-devkit
+  
+  If you're on **Maya 2017** download it from here: https://apps.autodesk.com/MAYA/en/Detail/Index?id=6303159649350432165&appLang=en
+  
+  
+  Instructions on how to set up your directories for your specific OS are here: http://help.autodesk.com/view/MAYAUL/2017/ENU//?guid=__files_Setting_up_your_build_environment_htm
+  
+  
   
 * **Other Editors**
+
   There are a lot of other editors, and I will personally not be using them for this course.
   However, if you have a preference for other editors, I will go over setting up the editors with Maya.
   The following editors will be covered
