@@ -63,15 +63,13 @@ class Gear(object):
 
     def makeTeeth(self, teeth=10, length=0.3):
         # The logic here is exactly the same as in the makeTeeth function we created
-        spans = teeth * 2
-        sideFaces = range(spans * 2, spans * 3, 2)
-
         cmds.select(clear=True)
-        for face in sideFaces:
-            cmds.select('%s.f[%s]' % (self.transform, face), add=True)
+        faces = self.getTeethFaces(teeth)
+        for face in faces:
+            cmds.select('%s.%s' % (self.transform, face), add=True)
 
         # Instead of returning a value, lets just store the extrude node onto the class as a class variable
-        self.extrude = cmds.polyExtrudeFacet(localTranslateZ=length)
+        self.extrude = cmds.polyExtrudeFacet(localTranslateZ=length)[0]
         cmds.select(clear=True)
 
     def changeLength(self, length=0.3):
@@ -80,9 +78,35 @@ class Gear(object):
         cmds.polyExtrudeFacet(self.extrude, edit=True, ltz=length)
 
     def changeTeeth(self, teeth=10, length=0.3):
-        # Since we know what the extrude node is, we'll just refer to it directly
-        cmds.delete(self.extrude)
-        # Similarly we know what node the constructor is, so we can refer to it directly
+        # we know what node the constructor is, so we can refer to it directly
         cmds.polyPipe(self.constructor, edit=True, sa=teeth * 2)
         # Then we can just call the makeTeeth directly
-        self.makeTeeth(teeth=teeth, length=length)
+        self.modifyExtrude(teeth=teeth, length=length)
+
+    def getTeethFaces(self, teeth):
+        spans = teeth * 2
+        sideFaces = range(spans * 2, spans * 3, 2)
+
+        faces = []
+        for face in sideFaces:
+            # Similar to what we did earlier, but using %d instead of %s
+            # In reality it doesn't matter, but here it means it will only accept a number
+            faces.append('f[%d]' % face)
+        return faces
+
+
+    def modifyExtrude(self, teeth=10, length=0.3):
+        faces = self.getTeethFaces(teeth)
+
+        # The extrude node has an attribute called inputComponents
+        # To change it we can use a simple setAttr call instead of recreating the extrude which can be expensive
+        # The arguments to changing a list of components is slightly different than a simple setAttr
+        # it is:
+        #   cmds.setAttr('extrudeNode.inputComponents', numberOfItems, item1, item2, item3, type='componentList')
+        cmds.setAttr('%s.inputComponents' % self.extrude, len(faces), *faces, type='componentList')
+
+        # The *faces will be new to you.
+        # It basically means to expand a list in place for arguments
+        # so if the list has ['f[1]', 'f[2]'] etc, it will be expanded in the arguments to be like this
+        # cmds.setAttr('extrudeNode.inputComponents', 2, 'f[1]', 'f[2]', type='componentList'
+
