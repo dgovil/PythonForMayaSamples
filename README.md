@@ -16,8 +16,8 @@ During the course, we'll create a few different projects to both showcase how Py
 * Automatically create Gears for modelling with a configurable amount of teeth ([LINK](gearCreator/))
 * An Animation Tweener with a simple UI ([LINK](tweener/))
 * A Library tool for Rigging Controls with a UI ([LINK](controllerLibrary/))
-* A Light Manager
-* A command line file tool to manage image sequences
+* A Light Manager [LINK](lightManager/))
+* A command line file tool to manage image sequences [LINK](commandLine/))
 
 ## Tools That We'll Be Using
 
