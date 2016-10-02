@@ -63,7 +63,6 @@ import pymel.core as pm
 from functools import partial
 
 
-
 class LightWidget(QtWidgets.QWidget):
     """
     Now on to the good stuff
@@ -89,6 +88,7 @@ class LightWidget(QtWidgets.QWidget):
         # If the light is a string, we want to convert it to a PyMel object to deal with it easier
         # The isInstance checks if it is of type basestring (which includes all the various string types)
         if isinstance(light, basestring):
+            logger.debug('Converting node to a PyNode')
             light = pm.PyNode(light)
 
         # Then we store the pyMel node on this class
@@ -96,7 +96,6 @@ class LightWidget(QtWidgets.QWidget):
 
         # Finally we call the buildUI method
         self.buildUI()
-
 
     def buildUI(self):
         # We create a GridLayout
@@ -179,153 +178,299 @@ class LightWidget(QtWidgets.QWidget):
         # We are saying that the widget should never be larger than the maximum space it needs
         self.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum)
 
-
     def disableLight(self, val):
         # This function takes a value, converts it to bool and then sets our checkbox to that value
         self.name.setChecked(not bool(val))
 
     def deleteLight(self):
+        # When we delete the light, we need to also delete our widget
+        # So lets set our parent to Nothing. This will remove it from the manager UI and tells Qt to stop holding onto it
         self.setParent(None)
+        # There is a period of time before Qt deletes it after we tell it to remove it
+        # So lets mark its visibility to False
         self.setVisible(False)
+        # Then we tell instruct it to delete it later just in case it hasn't gotten the hint yet
+        self.deleteLater()
+
+        # We only delete the light itself after the widget is deleted so that in the event of an error, we don't do any damage to the scene
+        # We use the light's transform to make sure we are deleting at the transform level and not just the shape under it
         pm.delete(self.light.getTransform())
 
     def setColor(self):
+        # First of all we get the color values from the light. This will be a list of 3 floats
         lightColor = self.light.color.get()
+        # Then we provide this to the maya's color editor which gives us back the color the user specified
         color = pm.colorEditor(rgbValue=lightColor)
-        r,g,b,a = [float(c) for c in color.split()]
 
-        color = (r,g,b)
+        # Annoyingly, it gives us back a string instead of a list of numbers.
+        # So we split the string, and then convert it to floats
+        r, g, b, a = [float(c) for c in color.split()]
+
+        # We then use the r,g,b to set the colors on the light and the button
+        color = (r, g, b)
         self.light.color.set(color)
         self.setButtonColor(color)
 
     def setButtonColor(self, color=None):
+        # This function sets the color on the color picker button
+        # If no color is provided, we get the color from the light
         if not color:
+            # We use pymels methods to query the value
             color = self.light.color.get()
 
-        assert len(color) ==  3, "You must provide a list of 3 colors"
-        r,g,b = [c*255 for c in color]
+        # We make sure that any provided color is a list of 3 items
+        # Assert is a one liner that is similar to this piece of code:
+        #
+        # if not len(color) == 3:
+        #       raise Exception("You must provide a list of 3 colors")
+        #
+        # It is generally useful for validating inputs with simple checks
+        assert len(color) == 3, "You must provide a list of 3 colors"
 
-        self.colorBtn.setStyleSheet('background-color: rgba(%s, %s, %s, 1.0);' % (r,g,b))
+        # Finally everything gives us the r,g,b in normalized floats from 0 to 1
+        # Qt expects it in integer values from 0 to 255
+        # So we multiply the members of color by 255 to get the correct number
+        r, g, b = [c * 255 for c in color]
 
-
+        # Qt lets us style objects using CSS similar to in websites
+        # So we give it a CSS string with the correct r,g,b values and a full alpha
+        self.colorBtn.setStyleSheet('background-color: rgba(%s, %s, %s, 1.0);' % (r, g, b))
 
 
 class LightingManager(QtWidgets.QWidget):
+    """
+    This is the main lighting manager.
+    To call it we just do
 
+    LightingManager(dock=True) and it will display docked, otherwise dock=False will display it as a window
+
+    """
+
+    # This is a dictionary of Light types to use for the Manager.
+    # The Key is the name that will be displayed in the UI
+    # The Value is the function that will be called
     lightTypes = {
         "Point Light": pm.pointLight,
         "Spot Light": pm.spotLight,
+        # This is our first exposure to partial
+        # Partial is like a lambda, and in most cases are identical.
+        # The difference is lambdas get their values when they run, partials get their values when you create it
+        # In this case, we are saying make a partial function to call pm.shadingNode and everything else will be arguments to it
+        # This is the same as
+        #
+        # def createAreaLight(self):
+        #     pm.shadingNode('areaLight', asLight=True)
+        #
+        # But it can be convenient to just use a partial rather than making functions for everything
         "Area Light": partial(pm.shadingNode, 'areaLight', asLight=True),
         "Directional Light": pm.directionalLight,
         "Volume Light": partial(pm.shadingNode, 'volumeLight', asLight=True)
     }
 
     def __init__(self, dock=False):
+        # So first we check if we want this to be able to dock
         if dock:
+            # If we should be able to dock, then we'll use this function to get the dock
             parent = getDock()
         else:
+            # Otherwise, lets remove all instances of the dock incase it's already docked
             deleteDock()
+            # Then if we have a UI called lightingManager, we'll delete it so that we can only have one instance of this
+            # A try except is a very important part of programming when we don't want an error to stop our code
+            # We first try to do something and if we fail, then we do something else.
             try:
                 pm.deleteUI('lightingManager')
             except:
-                pass
+                logger.debug('No previous UI exists')
 
-            parent = QtWidgets.QDialog(getMayaMainWindow())
-            parent.setWindowTitle('Lighting Manager')
+            # Then we create a new dialog and give it the main maya window as its parent
+            # we also store it as the parent for our current UI to be put inside
+            parent = QtWidgets.QDialog(parent=getMayaMainWindow())
+            # We set its name so that we can find and delete it later
             parent.setObjectName('lightingManager')
+            # Then we set the title
+            parent.setWindowTitle('Lighting Manager')
 
+            # Finally we give it a layout
             dlgLayout = QtWidgets.QVBoxLayout(parent)
 
+        # Now we are on to our actual widget
+        # We've figured out our parent, so lets send that to the QWidgets initialization method
         super(LightingManager, self).__init__(parent=parent)
+
+        # We call our buildUI method to construct our UI
         self.buildUI()
+
+        # We then add ourself to our parents layout
         self.parent().layout().addWidget(self)
+
+        # Finally if we're not docked, then we show our parent
         if not dock:
             parent.show()
 
-
     def buildUI(self):
+        # Like in the LightWidget we show our
         layout = QtWidgets.QGridLayout(self)
 
+        # We create a combobox
+        # Comboboxes are essentially dropdown selectionwidgets
         self.lightTypeCB = QtWidgets.QComboBox()
+        # We populate it with the items in our lightTypes dictionary
+        # I like to have my items alphabetically so I sort it to begin with
         for lightType in sorted(self.lightTypes):
+            # We add the option to the combobox
             self.lightTypeCB.addItem(lightType)
+        # Finally we add it to the layout in row 0, column 0
         layout.addWidget(self.lightTypeCB, 0, 0)
 
+        # We create a button to create the chosen lights
         createBtn = QtWidgets.QPushButton('Create')
+        # We connect the button so it calls the createLight method when its clicked
         createBtn.clicked.connect(self.createLight)
+        # We add it to the layout in row 0, column 1
         layout.addWidget(createBtn, 0, 1)
 
+        # We want to put all the LightWidgets inside a scrolling container
+        # We first need a container widget
         scrollWidget = QtWidgets.QWidget()
+        # We want to make sure this widget only tries to be the maximum size of its contents
         scrollWidget.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum)
+        # Then we give it a vertical layout because we want everything arranged vertically
         self.scrollLayout = QtWidgets.QVBoxLayout(scrollWidget)
 
-
+        # Finally we create a scrollArea that will be in charge of scrolling its contents
         scrollArea = QtWidgets.QScrollArea()
+        # Make sure it's resizable so it resizes as the UI grows or shrinks
         scrollArea.setWidgetResizable(True)
+        # Then we set it to use our container widget to scroll
         scrollArea.setWidget(scrollWidget)
-        layout.addWidget(scrollArea,1, 0, 1, 2)
+        # Then we add this scrollArea to the main layout, at row 1, column 0
+        # We tell it to take 1 row and 2 columns of space
+        layout.addWidget(scrollArea, 1, 0, 1, 2)
 
+        # Now we can tell it to populate with widgets for every light
         self.populate()
 
+        # We need a refresh button to manually force the UI to refresh on changes
         refreshBtn = QtWidgets.QPushButton('Refresh')
+        # We'll connect this to the refresh method
         refreshBtn.clicked.connect(self.refresh)
+        # Finally we add it to the layout at row 2, column 1
         layout.addWidget(refreshBtn, 2, 1)
 
-
-
-
     def refresh(self):
-        while self.scrollLayout.count():
-            widget = self.scrollLayout.takeAt(0).widget()
-            if widget:
-                widget.setVisible(False)
+        # This is one of the rare times I use a while loop
+        # It could be done in a for loop, but I want to show you how a while loop would look
 
+        # We say that while the scrollLayout.count() gives us any Truth-y value we will run the logic
+        # count() tells us how many children it has
+        while self.scrollLayout.count():
+            # We take the first child of the layout, and ask for the associated widget
+            # Taking the child, means that it is no longer under the care of its parent
+            widget = self.scrollLayout.takeAt(0).widget()
+            # Some objects don't have widgets, so we'll only run this for objects with a widget
+            if widget:
+                # We set the visibility to False because there is a period where it will still be alive
+                widget.setVisible(False)
+                # Then we tell it to kill the widget when it can
+                widget.deleteLater()
+
+        # Finally we tell it to populate again
         self.populate()
 
     def populate(self):
+        # We list all the existing lights in the scene by type of the lights
         for light in pm.ls(type=["areaLight", "spotLight", "pointLight", "directionalLight", "volumeLight"]):
-            light = pm.PyNode(light)
+            # PyMel gives us back a PyNode for each object it lists
+            # We will pass this to the addLight method that will create the widget for it
             self.addLight(light)
 
-
     def createLight(self):
+        # This function creates lights. Duh.
+        # First we get the text of the combobox
         lightType = self.lightTypeCB.currentText()
+
+        # Then we look up the lightTypes dictionary to find the function to call
         func = self.lightTypes[lightType]
 
+        # All our functions are pymel functions so they'll return a pymel object
         light = func()
+        # We wil pass this to the addLight method
         self.addLight(light)
 
-    def isolate(self, val):
-        lightWidgets = self.findChildren(LightWidget)
-        for widget in lightWidgets:
-            if widget !=  self.sender():
-                widget.disableLight(val)
-
     def addLight(self, light):
+        # This will create a LightWidget for the given light and add it to the UI
+        # First we create the LightWidget
         widget = LightWidget(light)
+
+        # Then we connect the onSolo signal from the widget to our isolate method
         widget.onSolo.connect(self.isolate)
+        # Finally we add it to the scrollLayout
         self.scrollLayout.addWidget(widget)
 
-
-
-
-def deleteDock(name='LightingManagerDock'):
-    if pm.workspaceControl(name, query=True, exists=True):
-        pm.deleteUI(name)
-
-def getDock(name='LightingManagerDock'):
-    deleteDock(name)
-    ctrl = pm.workspaceControl(name, dockToMainWindow=('right', 1), label="Lighting Manager")
-    qtCtrl = omui.MQtUtil_findControl(ctrl)
-    ptr = wrapInstance(long(qtCtrl), QtWidgets.QWidget)
-
-    return ptr
+    def isolate(self, val):
+        # This function will isolate a single light
+        # First we find all our children who are LightWidgets
+        lightWidgets = self.findChildren(LightWidget)
+        # We'll loop through the list to perform our logic
+        for widget in lightWidgets:
+            # Every signal lets us know who sent it that we can query with sender()
+            # So for every widget we check if its the sender
+            if widget != self.sender():
+                # If it's not the widget, we'll disable it
+                widget.disableLight(val)
 
 
 def getMayaMainWindow():
+    """
+    Since Maya is Qt, we can parent our UIs to it.
+    This means that we don't have to manage our UI and can leave it to Maya.
+
+    Returns:
+        QtWidgets.QMainWindow: The Maya MainWindow
+    """
+    # We use the OpenMayaUI API to get a reference to Maya's MainWindow
     win = omui.MQtUtil_mainWindow()
+    # Then we can use the wrapInstance method to convert it to something python can understand
+    # In this case, we're converting it to a QMainWindow
     ptr = wrapInstance(long(win), QtWidgets.QMainWindow)
+    # Finally we return this to whoever wants it
     return ptr
 
 
+def getDock(name='LightingManagerDock'):
+    """
+    This function creates a dock with the given name.
+    It's an example of how we can mix Maya's UI elements with Qt elements
+    Args:
+        name: The name of the dock to create
 
+    Returns:
+        QtWidget.QWidget: The dock's widget
+    """
+    # First lets delete any conflicting docks
+    deleteDock(name)
+    # Then we create a workspaceControl dock using Maya's UI tools
+    # This gives us back the name of the dock created
+    ctrl = pm.workspaceControl(name, dockToMainWindow=('right', 1), label="Lighting Manager")
+
+    # We can use the OpenMayaUI API to get the actual Qt widget associated with the name
+    qtCtrl = omui.MQtUtil_findControl(ctrl)
+
+    # Finally we use wrapInstance to convert it to something Python can understand, in this case a QWidget
+    ptr = wrapInstance(long(qtCtrl), QtWidgets.QWidget)
+
+    # And we return that QWidget back to whoever wants it.
+    return ptr
+
+
+def deleteDock(name='LightingManagerDock'):
+    """
+    A simple function to delete the given dock
+    Args:
+        name: the name of the dock
+    """
+    # We use the workspaceControl to see if the dock exists
+    if pm.workspaceControl(name, query=True, exists=True):
+        # If it does we delete it
+        pm.deleteUI(name)
