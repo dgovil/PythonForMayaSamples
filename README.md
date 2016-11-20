@@ -2,12 +2,19 @@
 
 Code samples for people who take part in my Python for Maya course
 
-The course is available here: [Python for Maya: Artist Friendly Programming](https://www.udemy.com/python-for-maya/?couponCode=TWITTER16BF).
-
-![Course Image](http://dgovil.com/wp-content/uploads/2016/11/1009476_7f51_2.jpg)
+The course is available here
+<a href="(https://www.udemy.com/python-for-maya/?couponCode=TWITTER16BF">
+<p>Python For Maya: Artist Friendly Programming</p>
+<br/><img src="http://dgovil.com/wp-content/uploads/2016/11/1009476_7f51_2.jpg">
+</a>
 
 This course will teach Python for Maya using an artist friendly approach, by breaking down concepts into small digestible pieces and giving projects with real world use.
 
+## About Me
+
+You can also find more information about me on my website
+
+[http://www,dgovil.com](http://dgovil.com/)
 
 ## Projects We'll Be Completing
 
