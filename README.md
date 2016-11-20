@@ -110,3 +110,22 @@ The course will cover the following libraries
 * `pymel`
 * `Qt`
 * `PySide` / `PySide2`
+
+
+## Other Resources
+
+### Products
+
+<small>(Just a note that these are all affiliate links.)</small>
+
+* [Maya Python For Games And Film](http://go.redirectingat.com?id=101037X1556917&xs=1&url=https%3A%2F%2Fwww.amazon.com%2FMaya-Python-Games-Film-Reference%2Fdp%2F0123785782%2Fref%3Dsr_1_1%3Fie%3DUTF8%26qid%3D1479605478%26sr%3D8-1%26keywords%3Dmaya%2Bpython%2Bfor%2Bfilm%2Band%2Bgames)
+
+  This was the book that I learned Python from, and I cannot recommend it enough. It goes a lot more in depth on each topic, as only a book can do, and it's probably the resource I recommend the most.
+  
+* [Practical Maya Programming With Python](http://go.redirectingat.com?id=101037X1556917&xs=1&url=https%3A%2F%2Fwww.amazon.com%2FPractical-Programming-Python-Robert-Galanakis%2Fdp%2F1849694729%2Fref%3Dsr_1_1%3Fie%3DUTF8%26qid%3D1479605681%26sr%3D8-1%26keywords%3Dpractical%2Bpython%2Bmaya)
+
+  Rob Galanakis is a fantastic resource on Python, who runs the [Tech-Artists](http://tech-artists.org/) forum, which is where I often went to get help when I was stuck on issues, or wanted to learn what other people were doing. His book is a great resource as well.
+  
+* [apid GUI Programming with Python and Qt: The Definitive Guide to PyQt Programming](http://go.redirectingat.com?id=101037X1556917&xs=1&url=https%3A%2F%2Fwww.amazon.com%2FRapid-GUI-Programming-Python-Definitive-ebook%2Fdp%2FB004YW6LNA%2Fref%3Dsr_1_1%3Fie%3DUTF8%26qid%3D1479605837%26sr%3D8-1%26keywords%3Drapid%2Bpyqt)
+
+  If you're interested in learning more about Qt, this is the best book to have in my opinion. He goes from very basic Qt useage to very advanced concepts. The book is based around PyQt4, but if you've watched my course, it should be easy enough to switch to whichever Qt library you're using
