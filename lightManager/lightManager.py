@@ -4,9 +4,13 @@ Fair Warning: This will be the most complex example in the course using more adv
 """
 
 # First of all let me grab the Qt module because it has somethings I want that I don't need to use often
+import json
+import os
+
 import Qt
 
 # I will use the following modules more often, so let me import them directly
+import time
 from Qt import QtWidgets, QtCore, QtGui
 
 # This is the logging module
@@ -90,6 +94,11 @@ class LightWidget(QtWidgets.QWidget):
         if isinstance(light, basestring):
             logger.debug('Converting node to a PyNode')
             light = pm.PyNode(light)
+
+        # We might also get passed the transform instead of the light shape, either as a PyNode or a name.
+        # So we'll check if it's a transform node and then get the shape
+        if isinstance(light, pm.nodetypes.Transform):
+            light = light.getShape()
 
         # Then we store the pyMel node on this class
         self.light = light
@@ -301,6 +310,9 @@ class LightingManager(QtWidgets.QWidget):
         # We call our buildUI method to construct our UI
         self.buildUI()
 
+        # Now we can tell it to populate with widgets for every light
+        self.populate()
+
         # We then add ourself to our parents layout
         self.parent().layout().addWidget(self)
 
@@ -321,14 +333,15 @@ class LightingManager(QtWidgets.QWidget):
             # We add the option to the combobox
             self.lightTypeCB.addItem(lightType)
         # Finally we add it to the layout in row 0, column 0
-        layout.addWidget(self.lightTypeCB, 0, 0)
+        # We tell it take 1 row and two columns worth of space
+        layout.addWidget(self.lightTypeCB, 0, 0, 1, 2)
 
         # We create a button to create the chosen lights
         createBtn = QtWidgets.QPushButton('Create')
         # We connect the button so it calls the createLight method when its clicked
         createBtn.clicked.connect(self.createLight)
-        # We add it to the layout in row 0, column 1
-        layout.addWidget(createBtn, 0, 1)
+        # We add it to the layout in row 0, column 2
+        layout.addWidget(createBtn, 0, 2)
 
         # We want to put all the LightWidgets inside a scrolling container
         # We first need a container widget
@@ -345,18 +358,29 @@ class LightingManager(QtWidgets.QWidget):
         # Then we set it to use our container widget to scroll
         scrollArea.setWidget(scrollWidget)
         # Then we add this scrollArea to the main layout, at row 1, column 0
-        # We tell it to take 1 row and 2 columns of space
-        layout.addWidget(scrollArea, 1, 0, 1, 2)
+        # We tell it to take 1 row and 3 columns of space
+        layout.addWidget(scrollArea, 1, 0, 1, 3)
 
-        # Now we can tell it to populate with widgets for every light
-        self.populate()
+        # We add the save button to save our lights
+        saveBtn = QtWidgets.QPushButton('Save')
+        # When clicked it will call the saveLights method
+        saveBtn.clicked.connect(self.saveLights)
+        # We add it to row 2, column 0
+        layout.addWidget(saveBtn, 2, 0)
+
+        # We also add an import button to import our lights
+        importBtn = QtWidgets.QPushButton('Import')
+        # When clicked it will call the importLights method
+        importBtn.clicked.connect(self.importLights)
+        # We add it to row 2, column 1
+        layout.addWidget(importBtn, 2, 1)
 
         # We need a refresh button to manually force the UI to refresh on changes
         refreshBtn = QtWidgets.QPushButton('Refresh')
         # We'll connect this to the refresh method
         refreshBtn.clicked.connect(self.refresh)
-        # Finally we add it to the layout at row 2, column 1
-        layout.addWidget(refreshBtn, 2, 1)
+        # Finally we add it to the layout at row 2, column 2
+        layout.addWidget(refreshBtn, 2, 2)
 
     def refresh(self):
         # This is one of the rare times I use a while loop
@@ -385,18 +409,118 @@ class LightingManager(QtWidgets.QWidget):
             # We will pass this to the addLight method that will create the widget for it
             self.addLight(light)
 
-    def createLight(self):
+    def saveLights(self):
+        # We'll now save the lights down to a JSON file that can be shared as a preset
+
+        # The properties dictionary will hold all the light properties to save down
+        properties = {}
+
+        # First lets get all the light widgets that exist in our manager
+        for lightWidget in self.findChildren(LightWidget):
+            # For each widget we can get its' light object
+            light = lightWidget.light
+
+            # Then we need to get its transform node
+            transform = light.getTransform()
+
+            # Finally we add it to the dictionary.
+            # The key will be the name of the transform which we get by converting the node to a string
+            # Then we simply query the attributes of the light that we want to save down
+            properties[str(transform)] = {
+                'translate': list(transform.translate.get()),
+                'rotation': list(transform.rotate.get()),
+                'lightType': pm.objectType(light),
+                'intensity': light.intensity.get(),
+                'color': light.color.get()
+            }
+
+        # We fetch the light manager directory to save in
+        directory = self.getDirectory()
+
+        # We then construct the name of the lightFile to save
+        # We'll be using time.strftime to construct a name using the current time
+        # %m%d will give 0701 for July 1st (month and day)
+        # so we'd end up with a name like lightFile_0701.json stored in our directory
+        lightFile = os.path.join(directory, 'lightFile_%s.json' % time.strftime('%m%d'))
+
+        # Next we open the file to write
+        with open(lightFile, 'w') as f:
+            # Then we use json to write out our file to this location
+            json.dump(properties, f, indent=4)
+
+        # A helpful logger call tells us where the file was saved to.
+        logger.info('Saving file to %s' % lightFile)
+
+    def getDirectory(self):
+        # The getDirectory method will give us back the name of our library directory and create it if it doesn't exist
+        directory = os.path.join(pm.internalVar(userAppDir=True), 'lightManager')
+        if not os.path.exists(directory):
+            os.mkdir(directory)
+        return directory
+
+    def importLights(self):
+        # This function goes over importing the lights back in.
+        # We first find the directory
+        directory = self.getDirectory()
+
+        # Then we use the QFileDialog to open a file browser so we can select the json file to import
+        # We give it self as the part, a name for the browser and tell it which directory to open to
+        fileName = QtWidgets.QFileDialog.getOpenFileName(self, "Light Browser", directory)
+
+        # Next we open the fileName in read mode
+        with open(fileName[0], 'r') as f:
+            # Then we use json to load the file into a dictionary
+            properties = json.load(f)
+
+        # We loop through the keys and values of this dictionary using properties.items()
+        for light, info in properties.items():
+
+            # We find the light type from the info
+            lightType = info.get('lightType')
+
+            # Then for each of the light types we support, we check if they match the light type
+            for lt in self.lightTypes:
+                # But the light type of a Point Light is pointLight, so we convert Point Light to pointLight and then compare
+                if ('%sLight' % lt.split()[0].lower()) == lightType:
+                    # If we found a match, then we break out
+                    break
+            else:
+                # For Loops also have an else statement. This only runs when the loop has not been broken out of
+                # We assume if we haven't broken out of the loop, then we haven't found the light type
+                # If that's the case, we just notify the user and continue on to the next light
+                logger.info('Cannot find a corresponding light type for %s (%s)' % (light, lightType))
+                continue
+
+            # we can reuse variable from the loop, in this case lt was the light type.
+            # We use this to create a light
+            light = self.createLight(lightType=lt)
+
+            # then we set the parameters on the light itself
+            light.intensity.set(info.get('intensity'))
+            light.color.set(info.get('color'))
+
+            # Then we get the transform of the light to set its parameters
+            transform = light.getTransform()
+            transform.translate.set(info.get('translate'))
+            transform.rotate.set(info.get('rotation'))
+
+        # After that's done, we call the populate method to refresh our interface
+        self.populate()
+
+    def createLight(self, lightType=None, add=True):
         # This function creates lights. Duh.
-        # First we get the text of the combobox
-        lightType = self.lightTypeCB.currentText()
+        # First we get the text of the combobox if we haven;t been given a light
+        if not lightType:
+            lightType = self.lightTypeCB.currentText()
 
         # Then we look up the lightTypes dictionary to find the function to call
         func = self.lightTypes[lightType]
 
         # All our functions are pymel functions so they'll return a pymel object
         light = func()
-        # We wil pass this to the addLight method
-        self.addLight(light)
+        # We wil pass this to the addLight method if the method has been told to add it
+        if add:
+            self.addLight(light)
 
     def addLight(self, light):
         # This will create a LightWidget for the given light and add it to the UI
