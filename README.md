@@ -68,12 +68,19 @@ For the course we will use the following
   
   Instructions on how to set up your directories for your specific OS are here: http://help.autodesk.com/view/MAYAUL/2017/ENU//?guid=__files_Setting_up_your_build_environment_htm
   
+* **Qt.py**
+
+  For the Qt portion of our course, there are several Qt libraries we can use.
+  If you're using Maya 2017 or above, you can use PySide2  or PyQt5. If you're using Maya 2016 or below, you can use PySide or PyQt4.
+  
+  Rather than having to develop for all these options, we can use a library that can make use of whichever one it finds.
+  This library is called **Qt.py** and you can download it here: https://github.com/mottosso/Qt.py
   
   
 * **Other Editors**
 
   There are a lot of other editors, and I will personally not be using them for this course.
-  However, if you have a preference for other editors, I will go over setting up the editors with Maya.
+  However, if you have a preference for other editors, I will go over setting up some of the editors with Maya.
   The following editors will be covered
   
   * Sublime Text
