@@ -1,6 +1,8 @@
 """
 In this code sample, we'll convert the functions we created earlier to make a gear, into a class.
 A class is a python object that lets you contain functions that relate to a specific object easily
+
+It will be a little different then the one in the video, because I've added a few more methods, but it should be easy to follow along.
 """
 import maya.cmds as cmds
 
@@ -32,7 +34,7 @@ class Gear(object):
     def __init__(self):
         # We will just use this __init__ to create placeholder variables on the class
         # Variables that start with self are set on the instance and can be accessed outside this function
-        self.constructor = None
+        self.shape = None
         self.transform = None
         self.constructor = None
         self.extrude = None
@@ -51,8 +53,8 @@ class Gear(object):
         self.makeTeeth(teeth=teeth, length=length)
 
     def createPipe(self, spans):
-        # We set the transform and constructor to the class variables
-        self.transform, self.constructor = cmds.polyPipe(subdivisionsAxis=spans)
+        # We set the transform and shape to the class variables
+        self.transform, self.shape = cmds.polyPipe(subdivisionsAxis=spans)
 
         # I didn't like having to find the constructor from the extrude node
         # Lets just find it now and save it to the class because it won't change
@@ -109,4 +111,7 @@ class Gear(object):
         # It basically means to expand a list in place for arguments
         # so if the list has ['f[1]', 'f[2]'] etc, it will be expanded in the arguments to be like this
         # cmds.setAttr('extrudeNode.inputComponents', 2, 'f[1]', 'f[2]', type='componentList'
+
+        # Finally we modify the length
+        self.changeLength(length)
 
