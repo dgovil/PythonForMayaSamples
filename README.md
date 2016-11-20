@@ -3,7 +3,7 @@
 Code samples for people who take part in my Python for Maya course
 
 The course is available here
-<a href="(https://www.udemy.com/python-for-maya/?couponCode=TWITTER16BF">
+<a href="https://www.udemy.com/python-for-maya/?couponCode=TWITTER16BF">
 <p>Python For Maya: Artist Friendly Programming</p>
 <br/><img src="http://dgovil.com/wp-content/uploads/2016/11/1009476_7f51_2.jpg">
 </a>
