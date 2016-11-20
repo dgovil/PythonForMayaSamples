@@ -32,7 +32,7 @@ class Gear(object):
     def __init__(self):
         # We will just use this __init__ to create placeholder variables on the class
         # Variables that start with self are set on the instance and can be accessed outside this function
-        self.shape = None
+        self.constructor = None
         self.transform = None
         self.constructor = None
         self.extrude = None
@@ -51,8 +51,8 @@ class Gear(object):
         self.makeTeeth(teeth=teeth, length=length)
 
     def createPipe(self, spans):
-        # We set the transform and shape to the class variables
-        self.transform, self.shape = cmds.polyPipe(subdivisionsAxis=spans)
+        # We set the transform and constructor to the class variables
+        self.transform, self.constructor = cmds.polyPipe(subdivisionsAxis=spans)
 
         # I didn't like having to find the constructor from the extrude node
         # Lets just find it now and save it to the class because it won't change
