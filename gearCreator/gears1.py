@@ -2,45 +2,33 @@
 # The name given to an imported module is a namepsace and it helps keep our code tidy
 import maya.cmds as cmds
 
-# We create a function called createPipe
+
+# We create a function called createGear
 # the 'def' keyword is used to indicate we will create a function
-# 'createPipe' will be the name of our function
-# the function has parameters inside ( ), with one called span
-def createPipe(spans=20):
+# 'createGear' will be the name of our function
+# the function has parameters inside ( ), with two: one for teeth and one for length. Each has a default value
+def createGear(teeth=10, length=0.3):
     """
-    Creates a polygon pipe object
+    This function will create a gear with the given parameters
     Args:
-        spans (int): the number of divisions we want along the length
+        teeth: The number of teeth to create
+        length: The length of the teeth
 
     Returns:
-        str: the name of the transform that was created
+        A tuple of the transform, constructor and extrude node
     """
     # Above this is the docstring enclosed in """ """ that documents the function
     # This helps for people who want to use the function without needing to read the code
 
+    # Teeth are every alternate face, so we double the number of teeth to get the number of spans required
+    spans = teeth * 2
+
     # the polyPipe command will create a polygon pipe
     # the subdivisionsAxis will say how many divisions we'll have along it's length
-    # It returns a list of [transform, shape]
+    # It returns a list of [transform, constructor]
     # Instead of getting a list and then extracting it's members, we can directly expand it to variables like here
-    transform, shape = cmds.polyPipe(subdivisionsAxis=spans)
-
-    # Finally we return the transform
-    return transform
-
-# Our makeTeeth function will take the pipe object, the number of teeth to make and the length of the teeth
-def makeTeeth(pipe, teeth=10, length=0.3):
-    """
-    For a given pipe with a number of spans, create teeth of a given length
-    Args:
-        pipe (str): the name of the pipe object we'll use
-        teeth (int): the number of teeth to create
-        length (float): the length of the teeth
-
-    Returns:
-        str: the name of the extrude node that was created
-    """
-    # Since the teeth will be on every other face, we need double the spans
-    spans = teeth * 2
+    # The transform is the name of the node created and the constructor is the node that creates the pipe and controls its parameters
+    transform, constructor = cmds.polyPipe(subdivisionsAxis=spans)
 
     # We need to select all the faces that will become the teeth.
     # We use the range function to start at span times 2 because that's where the side faces start from
@@ -48,7 +36,7 @@ def makeTeeth(pipe, teeth=10, length=0.3):
     # The third optional parameter is how big the steps we will take are.
     # So we'll be taking 2 steps instead of 1. e.g. 0, 2, 4, 6, 8
     # This will return a list of numbers
-    sideFaces = range(spans*2, spans*3, 2)
+    sideFaces = range(spans * 2, spans * 3, 2)
 
     # Now we need to clear the selection because we'll be adding each face to it
     cmds.select(clear=True)
@@ -59,114 +47,71 @@ def makeTeeth(pipe, teeth=10, length=0.3):
         # The '%s.f[%s]' notation looks odd but it expands to something like pPipe1.f[20]
         # Which tells it to select the 20th face of the pPipe1 object
         # The %s notation means it is a placeholder for the value of the variables after the %
-        cmds.select('%s.f[%s]' % (pipe, face), add=True)
+        cmds.select('%s.f[%s]' % (transform, face), add=True)
 
     # Now we extrude the selected faces by the given length
     # This gives us back the value of the extrude node inside a list
-    extrude = cmds.polyExtrudeFacet(localTranslateZ=length)
+    extrude = cmds.polyExtrudeFacet(localTranslateZ=length)[0]
 
-    # We just need to give back the first value of the list, so we get that and return it to whoever uses our function
-    return extrude[0]
+    # Finally we return a tuple of (transform, constructor, extrude)
+    # A tuple is similar to a list but cannot be modified.
+    # Notice that we don't need to provide the parenthesis that define a tuple, just adding  the comma here will do it for us
 
-
-def createGear(teeth=10, length=0.3):
-    """
-    Creates a gear with the given number of teeth of the given length
-    Args:
-        teeth (int): the number of teeth to create
-        length (float): the length of the gears
-
-    Returns:
-        list: [transform, extrudeNode]
-    """
-    # Since the teeth will be on every other face, we need double the spans
-    spans = teeth * 2
-
-    # Now we'll call our createPipe function which will give us back the pipe transform
-    pipe = createPipe(spans=spans)
-
-    # Now we'll use the makeTeeth function we created
-    extrude = makeTeeth(pipe, teeth=teeth, length=length)
-
-    # Finally we'll return the gear that was created
-    return pipe, extrude
+    # Here the transform is our gear node, the constructor is the node that creates the original pipe and the extrude is the node that extrudes the faces
+    return transform, constructor, extrude
 
 
-def changeLength(extrude, length=1):
-    """
-    For a given extrude node, change the length to the given value
-
-    Args:
-        extrude (str): the name of the extrude node
-        length (float): the length to set the extrude node to
-    """
-    # We use the same command we used to create the extrude node, but now with the edit flag
-    # When editing, we give it the extrude node we created so it knows what to edit
-    # Maya commands accept shorthand arguments
-    # In this case, ltz is the shorthand for localTranslateZ
-    cmds.polyExtrudeFacet(extrude, edit=True, ltz=length)
-
-    # For this function we don't return anything
-
-
-def changeTeeth(gear, teeth=10, length=0.3):
+# We now create the changeTeeth function that will modify our constructor and extrude node to change the teeth we get
+def changeTeeth(constructor, extrude, teeth=10, length=0.3):
     """
     Change the number of teeth on a gear with a given number of teeth and a given length for the teeth.
     This will create a new extrude node.
     Args:
-        gear (str): the name of the gear that will be created
+        constructor (str): the constructor node
+        extrude (str): the extrude node
         teeth (int): the number of teeth to create
         length (float): the length of the teeth to create
-
-    Returns:
-        str: the name of the new extrude node
     """
-    # We'll list the connections of the gear's inMesh. This gives us back a list
-    inputs = cmds.listConnections(gear+'.inMesh')
+    # Just like before we calculate the number of spans required by duplicating the number of teeth.
+    spans = teeth * 2
 
-    # We'll make a temporary variable called extrude
-    extrude = None
-    # We loop through the input nodes
-    for node in inputs:
-        # We check if its an extrude node
-        if cmds.objectType(node) == 'polyExtrudeFace':
-            # If it is, we store it in the extrude variable we created
-            extrude = node
-            # We now break out of this loop, which means that we'll stop the loop completely
-            break
+    # We then use the same polyPipe command we used to create the pipe to modify it, this time providing the edit=True parameter
+    # This edit parameter tells it we want to modify its attributes instead of creating a new one
+    cmds.polyPipe(constructor, edit=True,
+                  subdivisionsAxis=spans)
 
-    # Now that we have the extrude node we need to find the polyPipe construction node to change it
-    polyPipe = getConstructor(extrude)
+    # As we did when creating it we need to get a list of faces to extrude as teeth
+    sideFaces = range(spans * 2, spans * 3, 2)
+    faceNames = []
 
-    # Once we find that , we no longer need this extrude node so lets get rid of it
-    cmds.delete(extrude)
+    # We need to get a list in the following format
+    # [u'f[40]', u'f[42]', u'f[44]', u'f[46]', u'f[48]', u'f[50]', u'f[52]', u'f[54]', u'f[56]', u'f[58]']
 
-    # Now we edit the polyPipe by giving it to the polyPipe command with the edit parameter
-    # We'll use the shorthand for subdivisionsaxis which is sa
-    cmds.polyPipe(polyPipe, edit=True, sa=teeth*2)
+    # So we'll loop through all the sidefaces
+    for face in sideFaces:
+        # And we'll use the string substitution to create the names
+        # In this case, %s will be replaced by 'face' which is the number of our face
+        faceName = 'f[%s]' % (face)
 
-    # Finally we use the makeTeeth function again to create the teeth again with the new faces
-    extrude = makeTeeth(gear, teeth=teeth, length=length)
+        # We'll add this to our list of faceNames
+        faceNames.append(faceName)
 
-    # Finally we return the name of the new extrude node
-    return extrude
+    # Then we must modify the extrude's parameter for which components it affects.
+    # This takes a few different arguments
 
+    # The extrude node has an attribute called inputComponents
+    # To change it we can use a simple setAttr call instead of recreating the extrude which can be expensive
+    # The arguments to changing a list of components is slightly different than a simple setAttr
+    # it is:
+    #   cmds.setAttr('extrudeNode.inputComponents', numberOfItems, item1, item2, item3, type='componentList')
+    cmds.setAttr('%s.inputComponents' % (extrude),
+                 len(faceNames),
+                 *faceNames,
+                 type="componentList")
 
-def getConstructor(extrude):
-    """
-    Finds the polyPipe creation node from a given extrude node
-    Args:
-        extrude (str): The name of the extrude node
-    Returns:
-        str: the name of the polyPipe construction node
-    """
-    # We will list the connections coming into the extrude node's inputPolymesh
-    # This will return a list of things that are connected
-    inputs = cmds.listConnections('%s.inputPolymesh' % extrude)
+    # The *faces will be new to you.
+    # It basically means to expand a list in place for arguments
+    # so if the list has ['f[1]', 'f[2]'] etc, it will be expanded in the arguments to be like this
+    # cmds.setAttr('extrudeNode.inputComponents', 2, 'f[1]', 'f[2]', type='componentList'
 
-    # Now loop through the nodes that are connected to try and find it
-    for node in inputs:
-        # We'll check if the node is a polyPipe node
-        if cmds.objectType(node) == 'polyPipe':
-            # If it is, we'll return it. This will exit the function immediately and send back the name of the node
-            return node
+    cmds.polyExtrudeFacet(extrude, edit=True, ltz=length)
