@@ -114,9 +114,9 @@ The course will cover the following libraries
 
 ## Other Resources
 
-### Products
+### Books
 
-<small>(Just a note that these are all affiliate links.)</small>
+Just a note that these links are affiliate links that will go to your local Amazon storefront.
 
 * [Maya Python For Games And Film](http://go.redirectingat.com?id=101037X1556917&xs=1&url=https%3A%2F%2Fwww.amazon.com%2FMaya-Python-Games-Film-Reference%2Fdp%2F0123785782%2Fref%3Dsr_1_1%3Fie%3DUTF8%26qid%3D1479605478%26sr%3D8-1%26keywords%3Dmaya%2Bpython%2Bfor%2Bfilm%2Band%2Bgames)
 
@@ -126,6 +126,37 @@ The course will cover the following libraries
 
   Rob Galanakis is a fantastic resource on Python, who runs the [Tech-Artists](http://tech-artists.org/) forum, which is where I often went to get help when I was stuck on issues, or wanted to learn what other people were doing. His book is a great resource as well.
   
-* [apid GUI Programming with Python and Qt: The Definitive Guide to PyQt Programming](http://go.redirectingat.com?id=101037X1556917&xs=1&url=https%3A%2F%2Fwww.amazon.com%2FRapid-GUI-Programming-Python-Definitive-ebook%2Fdp%2FB004YW6LNA%2Fref%3Dsr_1_1%3Fie%3DUTF8%26qid%3D1479605837%26sr%3D8-1%26keywords%3Drapid%2Bpyqt)
+* [Rapid GUI Programming with Python and Qt: The Definitive Guide to PyQt Programming](http://go.redirectingat.com?id=101037X1556917&xs=1&url=https%3A%2F%2Fwww.amazon.com%2FRapid-GUI-Programming-Python-Definitive-ebook%2Fdp%2FB004YW6LNA%2Fref%3Dsr_1_1%3Fie%3DUTF8%26qid%3D1479605837%26sr%3D8-1%26keywords%3Drapid%2Bpyqt)
 
   If you're interested in learning more about Qt, this is the best book to have in my opinion. He goes from very basic Qt useage to very advanced concepts. The book is based around PyQt4, but if you've watched my course, it should be easy enough to switch to whichever Qt library you're using
+  
+* [Complete Maya Programming: An Extensive Guide to MEL and C++ API](http://go.redirectingat.com?id=101037X1556917&xs=1&url=https%3A%2F%2Fwww.amazon.com%2FComplete-Maya-Programming-Extensive-Kaufmann%2Fdp%2F1558608354%2Fref%3Dsr_1_1%3Fie%3DUTF8%26qid%3D1479607371%26sr%3D8-1%26keywords%3DMEL%2BC%252B%252B)
+
+ This is for MEL and C++ obviously, and quite an old book, but it's one that is still incredibly useful if you're interested in those languages, and one that many developers have learned from.
+ 
+* [Learn Python The Hard Way](http://go.redirectingat.com?id=101037X1556917&xs=1&url=https%3A%2F%2Fwww.amazon.com%2FLearn-Python-Hard-Way-Introduction%2Fdp%2F0321884914%2Fref%3Dsr_1_1%3Fie%3DUTF8%26qid%3D1479607767%26sr%3D8-1%26keywords%3Dlearn%2Bpython%2Bthe%2Bhard%2Bway)
+
+ The title is a bit ironic, because it teaches you Python in the easiest way possible. It's not related to Maya at all, but a really good book if you want to focus on just Python
+ 
+### Websites and Blogs
+
+* [Rigging Dojo] (http://www.riggingdojo.com/)
+
+ Rigging Dojo is **the** online school for rigging and technical skills. They have a ton of great mentored courses on Python, C++, Rigging etc..
+ 
+* [Python For Maya: Google Group] (https://groups.google.com/forum/?fromgroups#!forum/python_inside_maya)
+
+  A great google group run by Justin Israel, where people can ask questions about Python and get help from other Python developers.
+
+* [TDsAnonymous] (http://www.tdsanonymous.com/)
+
+  A companion site for an online community I'm part of. The community is invite only, but the site is a place where we can contain resources that we find useful.
+  
+* [Zetcode PyQt4](http://zetcode.com/gui/pyqt4/) and [Zetcode PyQt5](http://zetcode.com/gui/pyqt5/)
+
+ A quick introduction to using PyQt4 and PyQt5. If you're using PySide, just replace the library name.
+ This is where I learned to use PyQt4 from when I was teaching myself Python, and it's the first place I point people to when they want to learn.
+
+* [CodeHeadWords](https://codeheadwords.com/)
+
+  This is a blog run by John Hood who is a coworker of mine who's taught me a ton. 
