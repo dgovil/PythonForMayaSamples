@@ -14,7 +14,7 @@ This course will teach Python for Maya using an artist friendly approach, by bre
 
 You can also find more information about me on my website
 
-[http://www,dgovil.com](http://dgovil.com/)
+[http://www.dgovil.com](http://dgovil.com/)
 
 ## Projects We'll Be Completing
 
@@ -25,8 +25,8 @@ During the course, we'll create a few different projects to both showcase how Py
 * Automatically create Gears for modelling with a configurable amount of teeth ([LINK](gearCreator/))
 * An Animation Tweener with a simple UI ([LINK](tweener/))
 * A Library tool for Rigging Controls with a UI ([LINK](controllerLibrary/))
-* A Light Manager [LINK](lightManager/))
-* A command line file tool to manage image sequences [LINK](commandLine/))
+* A Light Manager ([LINK](lightManager/))
+* A command line file tool to manage image sequences ([LINK](commandLine/))
 
 ## Tools That We'll Be Using
 
@@ -147,6 +147,10 @@ Just a note that these links are affiliate links that will go to your local Amaz
 * [Python For Maya: Google Group] (https://groups.google.com/forum/?fromgroups#!forum/python_inside_maya)
 
   A great google group run by Justin Israel, where people can ask questions about Python and get help from other Python developers.
+
+* [Learn X in Y Minutes: Python](https://learnxinyminutes.com/docs/python/)
+
+  A website dedicated to giving a really quick introduction to programming languages.
 
 * [TDsAnonymous] (http://www.tdsanonymous.com/)
 
