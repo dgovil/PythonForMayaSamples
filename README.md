@@ -2,8 +2,11 @@
 
 ## Table of Contents
 
-[Course Outline](#course-outline)
-[create an anchor](#anchors-in-markdown)
+* [Course Outline](#course-outline)
+* [Software Being Used](#tools-that-will-be-used)
+* [Resources](#other-resources)
+  * [Books](#books)
+  * [Websites](#websites-and-blogs)
 
 ## Course Outline
 
@@ -17,13 +20,13 @@ The course is available here
 
 This course will teach Python for Maya using an artist friendly approach, by breaking down concepts into small digestible pieces and giving projects with real world use.
 
-## About Me
+### About Me
 
 You can also find more information about me on my website
 
 [http://www.dgovil.com](http://dgovil.com/)
 
-## Projects We'll Be Completing
+### Projects We'll Be Completing
 
 During the course, we'll create a few different projects to both showcase how Python is useful in a real world context,and to learn new concepts
 
@@ -35,7 +38,7 @@ During the course, we'll create a few different projects to both showcase how Py
 * A Light Manager ([LINK](lightManager/))
 * A command line file tool to manage image sequences ([LINK](commandLine/))
 
-## Tools That We'll Be Using
+## Tools That Will Be Used
 
 For the course we will use the following
 
