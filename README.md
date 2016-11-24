@@ -1,4 +1,11 @@
-# Python For Maya: An Artist Friendly Course
+# Python For Maya: Artist Friendly Programming
+
+## Table of Contents
+
+[Course Outline](#course-outline)
+[create an anchor](#anchors-in-markdown)
+
+## Course Outline
 
 Code samples for people who take part in my Python for Maya course
 
