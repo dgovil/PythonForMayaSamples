@@ -144,9 +144,6 @@ Just a note that these links are affiliate links that will go to your local Amaz
 
  This is for MEL and C++ obviously, and quite an old book, but it's one that is still incredibly useful if you're interested in those languages, and one that many developers have learned from.
  
-* [Learn Python The Hard Way](http://go.redirectingat.com?id=101037X1556917&xs=1&url=https%3A%2F%2Fwww.amazon.com%2FLearn-Python-Hard-Way-Introduction%2Fdp%2F0321884914%2Fref%3Dsr_1_1%3Fie%3DUTF8%26qid%3D1479607767%26sr%3D8-1%26keywords%3Dlearn%2Bpython%2Bthe%2Bhard%2Bway)
-
- The title is a bit ironic, because it teaches you Python in the easiest way possible. It's not related to Maya at all, but a really good book if you want to focus on just Python
  
 ### Websites and Blogs
 
