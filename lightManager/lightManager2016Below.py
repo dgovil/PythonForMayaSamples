@@ -318,13 +318,12 @@ class LightingManager(QtWidgets.QWidget):
         # Now we can tell it to populate with widgets for every light
         self.populate()
 
-        # We then add ourself to our parents layout
-        self.parent().layout().addWidget(self)
-
         # <=Maya2016: For Maya 2016 and below we need to create the dock after we create our widget
         if dock:
             getDock()
         else:
+            # We then add ourself to our parents layout
+            self.parent().layout().addWidget(self)
             # Finally if we're not docked, then we show our parent
             parent.show()
 
