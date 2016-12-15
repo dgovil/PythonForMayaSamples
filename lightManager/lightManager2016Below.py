@@ -1,4 +1,7 @@
 """
+This is the same as the lightManager code but for Maya 2016 and Below which use the dockControl instead of the workspaceControl.
+The main changes are in the __init__ method of the LightManager class, the getDock function and the deleteDock function
+
 Fair Warning: This will be the most complex example in the course using more advanced maya features alongside
               more advanced python features than previous examples.
 """
@@ -278,9 +281,10 @@ class LightingManager(QtWidgets.QWidget):
 
     def __init__(self, dock=False):
         # So first we check if we want this to be able to dock
+        # <=MAYA2016: If using Maya 2016 and below, we need to create our widget first and then create the dock.
+        #             This is the opposite of Maya 2017's behavior.
         if dock:
-            # If we should be able to dock, then we'll use this function to get the dock
-            parent = getDock()
+            parent = None
         else:
             # Otherwise, lets remove all instances of the dock incase it's already docked
             deleteDock()
@@ -296,6 +300,7 @@ class LightingManager(QtWidgets.QWidget):
             # we also store it as the parent for our current UI to be put inside
             parent = QtWidgets.QDialog(parent=getMayaMainWindow())
             # We set its name so that we can find and delete it later
+            # <=Maya2016: This also lets us attach the light manager to our dock control
             parent.setObjectName('lightingManager')
             # Then we set the title
             parent.setWindowTitle('Lighting Manager')
@@ -316,8 +321,11 @@ class LightingManager(QtWidgets.QWidget):
         # We then add ourself to our parents layout
         self.parent().layout().addWidget(self)
 
-        # Finally if we're not docked, then we show our parent
-        if not dock:
+        # <=Maya2016: For Maya 2016 and below we need to create the dock after we create our widget
+        if dock:
+            getDock()
+        else:
+            # Finally if we're not docked, then we show our parent
             parent.show()
 
     def buildUI(self):
@@ -574,18 +582,15 @@ def getDock(name='LightingManagerDock'):
     """
     # First lets delete any conflicting docks
     deleteDock(name)
-    # Then we create a workspaceControl dock using Maya's UI tools
+    # Then we create a dockControl dock using Maya's UI tools
     # This gives us back the name of the dock created
-    ctrl = pm.workspaceControl(name, dockToMainWindow=('right', 1), label="Lighting Manager")
+    
+    # <=Maya2016: In Maya 2016 and below, we just give our Light Managers object name to the dockControl.
+    # You can see this name when we do self.setObjectName in the LightManagers __init__ method
+    ctrl = pm.dockControl(name, area='right', content='lightingManager', allowedArea='all', label="Lighting Manager")
 
-    # We can use the OpenMayaUI API to get the actual Qt widget associated with the name
-    qtCtrl = omui.MQtUtil_findControl(ctrl)
-
-    # Finally we use wrapInstance to convert it to something Python can understand, in this case a QWidget
-    ptr = wrapInstance(long(qtCtrl), QtWidgets.QWidget)
-
-    # And we return that QWidget back to whoever wants it.
-    return ptr
+    # And then we return the control name
+    return ctrl
 
 
 def deleteDock(name='LightingManagerDock'):
@@ -594,7 +599,7 @@ def deleteDock(name='LightingManagerDock'):
     Args:
         name: the name of the dock
     """
-    # We use the workspaceControl to see if the dock exists
-    if pm.workspaceControl(name, query=True, exists=True):
+    # We use the dockControl to see if the dock exists
+    if pm.dockControl(name, query=True, exists=True):
         # If it does we delete it
         pm.deleteUI(name)
