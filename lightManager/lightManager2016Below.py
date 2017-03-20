@@ -320,6 +320,8 @@ class LightingManager(QtWidgets.QWidget):
 
         # <=Maya2016: For Maya 2016 and below we need to create the dock after we create our widget
         if dock:
+            # We need to set the object name here before we get the dock so that we can access it
+            self.setObjectName('lightingManager')
             getDock()
         else:
             # We then add ourself to our parents layout
