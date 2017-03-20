@@ -289,7 +289,7 @@ class LightingManager(QtWidgets.QWidget):
             pm.deleteUI('lightingManager')
         except:
             logger.debug('No previous UI exists')
-
+        # <=Maya2016: For Maya 2016 and below we always put it inside a QDialog and only dock at the end of this __init__
         # Then we create a new dialog and give it the main maya window as its parent
         # we also store it as the parent for our current UI to be put inside
         parent = QtWidgets.QDialog(parent=getMayaMainWindow())
@@ -319,7 +319,6 @@ class LightingManager(QtWidgets.QWidget):
 
         # <=Maya2016: For Maya 2016 and below we need to create the dock after we create our widget's parent window
         if dock:
-            # We need to set the object name here before we get the dock so that we can access it
             getDock()
 
     def buildUI(self):
