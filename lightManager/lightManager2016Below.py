@@ -280,33 +280,27 @@ class LightingManager(QtWidgets.QWidget):
     }
 
     def __init__(self, dock=False):
-        # So first we check if we want this to be able to dock
-        # <=MAYA2016: If using Maya 2016 and below, we need to create our widget first and then create the dock.
-        #             This is the opposite of Maya 2017's behavior.
-        if dock:
-            parent = None
-        else:
-            # Otherwise, lets remove all instances of the dock incase it's already docked
-            deleteDock()
-            # Then if we have a UI called lightingManager, we'll delete it so that we can only have one instance of this
-            # A try except is a very important part of programming when we don't want an error to stop our code
-            # We first try to do something and if we fail, then we do something else.
-            try:
-                pm.deleteUI('lightingManager')
-            except:
-                logger.debug('No previous UI exists')
+        # First lets delete a dock if we have one so that we aren't creating more than we neec
+        deleteDock()
+        # Then if we have a UI called lightingManager, we'll delete it so that we can only have one instance of this
+        # A try except is a very important part of programming when we don't want an error to stop our code
+        # We first try to do something and if we fail, then we do something else.
+        try:
+            pm.deleteUI('lightingManager')
+        except:
+            logger.debug('No previous UI exists')
 
-            # Then we create a new dialog and give it the main maya window as its parent
-            # we also store it as the parent for our current UI to be put inside
-            parent = QtWidgets.QDialog(parent=getMayaMainWindow())
-            # We set its name so that we can find and delete it later
-            # <=Maya2016: This also lets us attach the light manager to our dock control
-            parent.setObjectName('lightingManager')
-            # Then we set the title
-            parent.setWindowTitle('Lighting Manager')
+        # Then we create a new dialog and give it the main maya window as its parent
+        # we also store it as the parent for our current UI to be put inside
+        parent = QtWidgets.QDialog(parent=getMayaMainWindow())
+        # We set its name so that we can find and delete it later
+        # <=Maya2016: This also lets us attach the light manager to our dock control
+        parent.setObjectName('lightingManager')
+        # Then we set the title
+        parent.setWindowTitle('Lighting Manager')
 
-            # Finally we give it a layout
-            dlgLayout = QtWidgets.QVBoxLayout(parent)
+        # Finally we give it a layout
+        dlgLayout = QtWidgets.QVBoxLayout(parent)
 
         # Now we are on to our actual widget
         # We've figured out our parent, so lets send that to the QWidgets initialization method
@@ -318,16 +312,15 @@ class LightingManager(QtWidgets.QWidget):
         # Now we can tell it to populate with widgets for every light
         self.populate()
 
-        # <=Maya2016: For Maya 2016 and below we need to create the dock after we create our widget
+        # We then add ourself to our parents layout
+        self.parent().layout().addWidget(self)
+        # Finally if we're not docked, then we show our parent
+        parent.show()
+
+        # <=Maya2016: For Maya 2016 and below we need to create the dock after we create our widget's parent window
         if dock:
             # We need to set the object name here before we get the dock so that we can access it
-            self.setObjectName('lightingManager')
             getDock()
-        else:
-            # We then add ourself to our parents layout
-            self.parent().layout().addWidget(self)
-            # Finally if we're not docked, then we show our parent
-            parent.show()
 
     def buildUI(self):
         # Like in the LightWidget we show our
