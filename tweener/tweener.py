@@ -101,6 +101,9 @@ def tween(percentage, obj=None, attrs=None, selection=True):
             currentValue = previousValue + biasedDifference
 
         # Finally we set this value
+        # Sometimes Maya doesn't update the viewport when just setting a key so also do a setAttr
+        cmds.setAttr(attrFull, currentValue)
+        # Then finally set the key
         cmds.setKeyframe(attrFull, time=currentTime, value=currentValue)
 
 
