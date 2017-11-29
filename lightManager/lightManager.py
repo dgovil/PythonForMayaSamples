@@ -522,6 +522,8 @@ class LightingManager(QtWidgets.QWidget):
         if add:
             self.addLight(light)
 
+        return light
+
     def addLight(self, light):
         # This will create a LightWidget for the given light and add it to the UI
         # First we create the LightWidget
