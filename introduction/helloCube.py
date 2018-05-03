@@ -32,9 +32,9 @@ transform = cube[0]
 # While humans count lists from 1, computers count lists from 0.
 # It takes a while to get used to it, but you'll learn it quickly enough
 # So we've taken the first object in the list, with index of 0.
-# If you want the shape instead, you can get the second item in the list, at index 1
+# If you want the creation node instead, you can get the second item in the list, at index 1
 # As you can see the [] notation is used to get the item at that index
-shape = cube[1]
+creator = cube[1]
 
 # Now lets create a nurbs circle controller to parent the cube under
 # But I don't remember the command to create a circle!
