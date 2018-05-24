@@ -82,7 +82,7 @@ For the course we will use the following
   
   If you're on **Maya 2016** download the zip file from here: https://github.com/autodesk-adn/Maya-devkit
   
-  If you're on **Maya 2017** download it from here: https://apps.autodesk.com/MAYA/en/Detail/Index?id=6303159649350432165&appLang=en
+  If you're on **Maya 2017 or higher** download it from here: https://www.autodesk.com/developer-network/platform-technologies/maya
   
   
   Instructions on how to set up your directories for your specific OS are here: http://help.autodesk.com/view/MAYAUL/2017/ENU//?guid=__files_Setting_up_your_build_environment_htm
