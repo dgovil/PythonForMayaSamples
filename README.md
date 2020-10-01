@@ -1,4 +1,4 @@
-# Python For Maya: Artist Friendly Programming
+# Python For Maya Course: Artist Friendly Programming Language
 
 ## Table of Contents
 
@@ -20,13 +20,13 @@ The course is available here
 
 This course will teach Python for Maya using an artist friendly approach, by breaking down concepts into small digestible pieces and giving projects with real world use.
 
-### About Me
+### About Us
 
 You can also find more information about me on my website
 
 [http://www.dgovil.com](http://dgovil.com/)
 
-### Projects We'll Be Completing
+### Projects We'll Be Complte
 
 During the course, we'll create a few different projects to both showcase how Python is useful in a real world context,and to learn new concepts
 
@@ -38,7 +38,7 @@ During the course, we'll create a few different projects to both showcase how Py
 * A Light Manager ([LINK](lightManager/))
 * A command line file tool to manage image sequences ([LINK](commandLine/))
 
-## Tools That Will Be Used
+## Tools that will be used
 
 For the course we will use the following
 
@@ -138,18 +138,18 @@ Just a note that these links are affiliate links that will go to your local Amaz
   
 * [Rapid GUI Programming with Python and Qt: The Definitive Guide to PyQt Programming](http://go.redirectingat.com?id=101037X1556917&xs=1&url=https%3A%2F%2Fwww.amazon.com%2FRapid-GUI-Programming-Python-Definitive-ebook%2Fdp%2FB004YW6LNA%2Fref%3Dsr_1_1%3Fie%3DUTF8%26qid%3D1479605837%26sr%3D8-1%26keywords%3Drapid%2Bpyqt)
 
-  If you're interested in learning more about Qt, this is the best book to have in my opinion. He goes from very basic Qt useage to very advanced concepts. The book is based around PyQt4, but if you've watched my course, it should be easy enough to switch to whichever Qt library you're using
+  If you're interested in learning more about Qt, this is the best book to have in my opinion.It goes from very basic Qt uses to very advanced concepts. The book is based around PyQt4, but if you've watched my course, it should be easy to enough to switch to which ever Qt library you're using
   
 * [Complete Maya Programming: An Extensive Guide to MEL and C++ API](http://go.redirectingat.com?id=101037X1556917&xs=1&url=https%3A%2F%2Fwww.amazon.com%2FComplete-Maya-Programming-Extensive-Kaufmann%2Fdp%2F1558608354%2Fref%3Dsr_1_1%3Fie%3DUTF8%26qid%3D1479607371%26sr%3D8-1%26keywords%3DMEL%2BC%252B%252B)
 
- This is for MEL and C++ obviously, and quite an old book, but it's one that is still incredibly useful if you're interested in those languages, and one that many developers have learned from.
+ This is for MEL and C++ obviously, and quite an old book, but it's one that is still incredibly useful if you're interested in those languages or in one language then their are many developers you can  learned form them.
  
  
 ### Websites and Blogs
 
 * [Rigging Dojo] (http://www.riggingdojo.com/)
 
- Rigging Dojo is **the** online school for rigging and technical skills. They have a ton of great mentored courses on Python, C++, Rigging etc..
+ Rigging Dojo is **the** online school for rigging and technical skills. They have a ton's of great mentored courses on Python, C++, Rigging etc..
  
 * [Python For Maya: Google Group] (https://groups.google.com/forum/?fromgroups#!forum/python_inside_maya)
 
@@ -166,8 +166,8 @@ Just a note that these links are affiliate links that will go to your local Amaz
 * [Zetcode PyQt4](http://zetcode.com/gui/pyqt4/) and [Zetcode PyQt5](http://zetcode.com/gui/pyqt5/)
 
  A quick introduction to using PyQt4 and PyQt5. If you're using PySide, just replace the library name.
- This is where I learned to use PyQt4 from when I was teaching myself Python, and it's the first place I point people to when they want to learn.
+ This is where I learned to use PyQt4 from when I was learning Python, and it's the first place I point people to when they want to learn.
 
 * [CodeHeadWords](https://codeheadwords.com/)
 
-  This is a blog run by John Hood who is a coworker of mine who's taught me a ton. 
+  This is a blog run by John Hood who is a co-worker of mine who's taught me a more information about python. 
