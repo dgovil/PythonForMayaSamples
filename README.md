@@ -1,6 +1,6 @@
-# Python For Maya: Artist Friendly Programming
+# Python For All By Maya: Artist Friendly Programming
 
-## Table of Contents
+## Table of guide
 
 * [Course Outline](#course-outline)
 * [Software Being Used](#tools-that-will-be-used)
@@ -40,7 +40,7 @@ During the course, we'll create a few different projects to both showcase how Py
 
 ## Tools That Will Be Used
 
-For the course we will use the following
+For the course we will use the following tools
 
 * **Maya 2017**
 
@@ -122,7 +122,7 @@ The course will cover the following libraries
 * `PySide` / `PySide2`
 
 
-## Other Resources
+## Other Resources For Learn Python
 
 ### Books
 
